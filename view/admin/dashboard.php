@@ -51,11 +51,11 @@ if (!isset($_SESSION["idusuario"])) {
                     🏠 Inicio
                 </a>
 
-                <a href="../../view/admin/cliente.php" class="activo">
+                <a href="cliente.php">
                     👥 Clientes
                 </a>
 
-                <a href="#">
+                <a href="menu.php">
                     🍔 Menú
                 </a>
 
@@ -63,7 +63,7 @@ if (!isset($_SESSION["idusuario"])) {
                     🧾 Órdenes
                 </a>
 
-                <a href="#">
+                <a href="inventario.php">
                     📦 Inventario
                 </a>
 
@@ -199,14 +199,14 @@ if (!isset($_SESSION["idusuario"])) {
 
                 <div class="accesos">
 
-                    <a href="#">
+                    <a href="cliente.php">
                         <span>👥</span>
                         Clientes
                     </a>
 
-                    <a href="#">
-                        <span>🍔</span>
-                        Productos
+                    <a href="menu.php">
+                        <span>🍔</span> 
+                        Menú
                     </a>
 
                     <a href="#">
@@ -214,7 +214,7 @@ if (!isset($_SESSION["idusuario"])) {
                         Nueva orden
                     </a>
 
-                    <a href="#">
+                    <a href="inventario.php">
                         <span>📦</span>
                         Inventario
                     </a>

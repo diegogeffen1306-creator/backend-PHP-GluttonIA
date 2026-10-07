@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 10-07-2026 a las 03:14:32
+-- Tiempo de generación: 08-10-2026 a las 00:14:54
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -63,8 +63,17 @@ CREATE TABLE `cliente` (
 
 INSERT INTO `cliente` (`Idcliente`, `nombrecliente`, `apellidocliente`, `pedidosRealizados`) VALUES
 (1, 'Aylen ', 'Carrillo', 16),
-(3, 'Maria', 'Patiño', 10),
-(8, 'JAMES ', 'RAMIREZ', 35);
+(3, 'Maria ', 'Suarez', 3),
+(8, 'james ', 'rodriguez', 10),
+(9, 'Mary', 'caldera', 1),
+(10, 'wilmary', 'Carrillo', 3),
+(11, 'lorena', 'gomez', 49),
+(12, 'lorena', 'Patiño', 55),
+(13, 'lorena', 'caldera', 3),
+(14, 'yosmary', 'caldera', 42),
+(15, 'Aylen ', 'Perez', 44),
+(17, 'yosmar', 'navas', 80),
+(18, 'lorena', 'Patiño', 14);
 
 -- --------------------------------------------------------
 
@@ -96,6 +105,43 @@ INSERT INTO `delivery` (`IdDomiciliario`, `IdVehiculo`, `nombreDomiciliario`, `a
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `detalle_orden`
+--
+
+CREATE TABLE `detalle_orden` (
+  `IdDetalle` int(11) NOT NULL,
+  `IdOrden` int(11) NOT NULL,
+  `IdMenú` int(11) NOT NULL,
+  `cantidad` int(11) NOT NULL DEFAULT 1,
+  `precio_venta` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `inventario`
+--
+
+CREATE TABLE `inventario` (
+  `IdInsumo` int(11) NOT NULL,
+  `nombre_insumo` varchar(50) NOT NULL,
+  `cantidad_stock` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `unidad_medida` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `inventario`
+--
+
+INSERT INTO `inventario` (`IdInsumo`, `nombre_insumo`, `cantidad_stock`, `unidad_medida`) VALUES
+(1, 'Carne de res (Hamburguesa)', 5000.00, 'gramos'),
+(2, 'Pan de Hamburguesa', 50.00, 'unidades'),
+(3, 'Queso Cheddar', 2000.00, 'gramos'),
+(4, 'tomate', 500.00, 'gramos');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `menú`
 --
 
@@ -110,13 +156,10 @@ CREATE TABLE `menú` (
 --
 
 INSERT INTO `menú` (`IdMenú`, `menú`, `ingredientes`) VALUES
-(1, 'Pollo Broster', 'Pollo,especias,harina'),
-(2, 'Pollo Asado', 'Pollo,especias'),
-(3, 'arroz con pollo', 'Pollo,especias,arroz,zanahoria,arveja,habichuela,ajo,cebolla'),
-(4, 'combo mondongo', 'mondongo,especias,papa,ajo,cebolla'),
-(5, 'arroz con pollo', 'Pollo,especias,arroz,zanahoria,arveja,habichuela,ajo,cebolla'),
-(6, 'Pollo Asado', 'Pollo,especias'),
-(7, 'Pollo Broster', 'Pollo,especias,harina');
+(1, 'Pollo Broster', 'Pollo, especias, harina...'),
+(2, 'combo hamburguesa', 'carne,lechuga,tomate,cebolla,pan,salsas'),
+(3, 'Combo Hamburguesa Especial', 'Carne, queso, pan y papas'),
+(4, 'perro caliente', 'salchicha,queso,papa,salsa');
 
 -- --------------------------------------------------------
 
@@ -126,29 +169,56 @@ INSERT INTO `menú` (`IdMenú`, `menú`, `ingredientes`) VALUES
 
 CREATE TABLE `orden` (
   `IdOrden` int(11) NOT NULL,
-  `IdDomiciliario` int(11) NOT NULL,
-  `IdCategoria` int(11) NOT NULL,
-  `Idcliente` int(11) NOT NULL,
+  `fecha_orden` datetime NOT NULL DEFAULT current_timestamp(),
+  `mesa` varchar(10) NOT NULL,
+  `total` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `estado_orden` varchar(20) NOT NULL DEFAULT 'Pendiente'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `receta`
+--
+
+CREATE TABLE `receta` (
+  `IdReceta` int(11) NOT NULL,
   `IdMenú` int(11) NOT NULL,
-  `horaIngreso` datetime NOT NULL,
-  `horaSalida` datetime NOT NULL,
-  `estado` varchar(30) NOT NULL,
-  `tiempoPreparacion` time NOT NULL,
-  `responsable` varchar(30) NOT NULL
+  `IdInsumo` int(11) NOT NULL,
+  `cantidad_necesaria` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `orden`
+-- Volcado de datos para la tabla `receta`
 --
 
-INSERT INTO `orden` (`IdOrden`, `IdDomiciliario`, `IdCategoria`, `Idcliente`, `IdMenú`, `horaIngreso`, `horaSalida`, `estado`, `tiempoPreparacion`, `responsable`) VALUES
-(1, 1, 1, 1, 1, '2025-08-16 14:03:00', '2025-08-16 14:32:00', 'entregado', '00:29:00', 'operario'),
-(2, 2, 2, 2, 2, '2025-08-16 13:05:00', '2025-08-16 13:35:00', 'entregado', '00:30:00', 'operario'),
-(3, 3, 3, 3, 3, '2025-08-16 12:00:00', '2025-08-16 12:45:00', 'entregado', '00:45:00', 'operario'),
-(4, 4, 4, 4, 4, '2025-08-16 13:00:00', '2025-08-16 13:40:00', 'entregado', '00:40:00', 'cocinero'),
-(5, 5, 5, 5, 5, '2025-08-17 11:03:00', '2025-08-17 11:32:00', 'entregado', '00:29:00', 'operario'),
-(6, 6, 6, 6, 6, '2025-08-17 12:05:00', '2025-08-17 12:35:00', 'entregado', '00:30:00', 'cajero'),
-(7, 7, 7, 7, 7, '2025-08-17 13:10:00', '2025-08-17 13:50:00', 'entregado', '00:40:00', 'operario');
+INSERT INTO `receta` (`IdReceta`, `IdMenú`, `IdInsumo`, `cantidad_necesaria`) VALUES
+(1, 3, 1, 150.00),
+(2, 3, 2, 1.00),
+(3, 3, 3, 40.00);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `usuarios`
+--
+
+CREATE TABLE `usuarios` (
+  `idusuario` int(11) NOT NULL,
+  `nombreusuario` varchar(100) NOT NULL,
+  `correo` varchar(150) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `rol` varchar(30) NOT NULL DEFAULT 'administrador',
+  `estado` tinyint(1) NOT NULL DEFAULT 1,
+  `fecha_creacion` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `usuarios`
+--
+
+INSERT INTO `usuarios` (`idusuario`, `nombreusuario`, `correo`, `password`, `rol`, `estado`, `fecha_creacion`) VALUES
+(1, 'Administrador', 'admin@gluttonia.com', '$2y$12$EQlzZ5lxj4It8xaVe.BNi.QTi.yzvwAzRlJhb6Eq8YUQTaGdjCCZu', 'administrador', 1, '2026-10-06 17:54:42');
 
 -- --------------------------------------------------------
 
@@ -196,6 +266,20 @@ ALTER TABLE `delivery`
   ADD PRIMARY KEY (`IdDomiciliario`);
 
 --
+-- Indices de la tabla `detalle_orden`
+--
+ALTER TABLE `detalle_orden`
+  ADD PRIMARY KEY (`IdDetalle`),
+  ADD KEY `fk_detalle_orden` (`IdOrden`),
+  ADD KEY `fk_detalle_menu` (`IdMenú`);
+
+--
+-- Indices de la tabla `inventario`
+--
+ALTER TABLE `inventario`
+  ADD PRIMARY KEY (`IdInsumo`);
+
+--
 -- Indices de la tabla `menú`
 --
 ALTER TABLE `menú`
@@ -206,6 +290,21 @@ ALTER TABLE `menú`
 --
 ALTER TABLE `orden`
   ADD PRIMARY KEY (`IdOrden`);
+
+--
+-- Indices de la tabla `receta`
+--
+ALTER TABLE `receta`
+  ADD PRIMARY KEY (`IdReceta`),
+  ADD KEY `fk_receta_menu` (`IdMenú`),
+  ADD KEY `fk_receta_inventario` (`IdInsumo`);
+
+--
+-- Indices de la tabla `usuarios`
+--
+ALTER TABLE `usuarios`
+  ADD PRIMARY KEY (`idusuario`),
+  ADD UNIQUE KEY `correo` (`correo`);
 
 --
 -- Indices de la tabla `vehiculo`
@@ -221,7 +320,43 @@ ALTER TABLE `vehiculo`
 -- AUTO_INCREMENT de la tabla `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `Idcliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `Idcliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
+-- AUTO_INCREMENT de la tabla `detalle_orden`
+--
+ALTER TABLE `detalle_orden`
+  MODIFY `IdDetalle` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `inventario`
+--
+ALTER TABLE `inventario`
+  MODIFY `IdInsumo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `menú`
+--
+ALTER TABLE `menú`
+  MODIFY `IdMenú` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `orden`
+--
+ALTER TABLE `orden`
+  MODIFY `IdOrden` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `receta`
+--
+ALTER TABLE `receta`
+  MODIFY `IdReceta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `usuarios`
+--
+ALTER TABLE `usuarios`
+  MODIFY `idusuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Restricciones para tablas volcadas
@@ -241,10 +376,18 @@ ALTER TABLE `delivery`
   ADD CONSTRAINT `fk_DeliveryVehiculo` FOREIGN KEY (`IdDomiciliario`) REFERENCES `vehiculo` (`IdVehiculo`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `menú`
+-- Filtros para la tabla `detalle_orden`
 --
-ALTER TABLE `menú`
-  ADD CONSTRAINT `fk_MenúOrden` FOREIGN KEY (`IdMenú`) REFERENCES `orden` (`IdOrden`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `detalle_orden`
+  ADD CONSTRAINT `fk_detalle_menu` FOREIGN KEY (`IdMenú`) REFERENCES `menú` (`IdMenú`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_detalle_orden` FOREIGN KEY (`IdOrden`) REFERENCES `orden` (`IdOrden`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `receta`
+--
+ALTER TABLE `receta`
+  ADD CONSTRAINT `fk_receta_inventario` FOREIGN KEY (`IdInsumo`) REFERENCES `inventario` (`IdInsumo`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_receta_menu` FOREIGN KEY (`IdMenú`) REFERENCES `menú` (`IdMenú`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
